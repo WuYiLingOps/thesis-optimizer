@@ -12,7 +12,7 @@
 |------|-----|
 | **章节ID** | {{CHAPTER_ID}} |
 | **章节名称** | {{CHAPTER_NAME}} |
-| **行数范围** | L{{START_LINE}} - L{{END_LINE}} |
+| **位置范围** | L{{START_LINE}} - L{{END_LINE}}（.tex）/ 第{{START_PARA}}-{{END_PARA}}段（.docx）|
 | **字数（估算）** | {{WORD_COUNT}} |
 | **优先级** | {{PRIORITY}} |
 | **当前状态** | ⏳待处理 |
@@ -79,12 +79,12 @@
 #### 段落1: {{PARAGRAPH_TITLE}}
 
 **原文** (L{{START}}-L{{END}}):
-```latex
+```
 {{ORIGINAL_TEXT}}
 ```
 
 **优化后**:
-```latex
+```
 {{OPTIMIZED_TEXT}}
 ```
 
@@ -95,12 +95,12 @@
 #### 段落2: {{PARAGRAPH_TITLE}}
 
 **原文** (L{{START}}-L{{END}}):
-```latex
+```
 {{ORIGINAL_TEXT}}
 ```
 
 **优化后**:
-```latex
+```
 {{OPTIMIZED_TEXT}}
 ```
 
