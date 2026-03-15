@@ -89,6 +89,13 @@
       └─→ ... 其他章节任务文档
 ```
 
+### 📄 支持格式
+
+| 格式 | 读取 | 写回 | 依赖 |
+|------|------|------|------|
+| `.tex` | 直接读取 | 就地编辑 | 无 |
+| `.docx` | pandoc 提取 | tracked changes 写回 | pandoc |
+
 ### 🔄 闭环优化流程
 
 <div align="center">
@@ -282,15 +289,28 @@ git clone https://github.com/Haimbeau1o/thesis-optimizer.git
 
 ### 第一步：准备论文
 
-确保您的论文是 **LaTeX 格式**（`.tex` 文件）。
+支持以下两种格式，无需转换，直接使用：
+
+| 格式 | 说明 |
+|------|------|
+| **LaTeX** (`.tex`) | 直接读取源文件，优化后写回 `.tex` |
+| **Word** (`.docx`) | 通过 pandoc 提取文本，优化后以 tracked changes 方式写回 |
 
 ### 第二步：启动优化
 
 在您的 AI 助手中（Antigravity / Codex / Cursor 等），输入以下指令：
 
+**LaTeX 论文**：
 ```
 @thesis-optimizer
 我的论文路径是 /path/to/thesis/thesis_liuxuewen.tex
+请帮我进行降 AI 和降重优化
+```
+
+**Word 论文**：
+```
+@thesis-optimizer
+我的论文路径是 /path/to/thesis/thesis_liuxuewen.docx
 请帮我进行降 AI 和降重优化
 ```
 
@@ -303,7 +323,7 @@ git clone https://github.com/Haimbeau1o/thesis-optimizer.git
 3. ✅ **逐章节优化**：
    - 创建章节任务文档（如 `chapter_01_abstract.md`）
    - 应用三大优化策略（降 AI / 降重 / 润色）
-   - 生成优化后的 LaTeX 代码
+   - `.tex`：直接写回源文件；`.docx`：以 tracked changes 方式写回，可在 Word 中逐条审阅
    - 更新进度状态
 4. ✅ **质量评估**：参照评估标准验证效果
 5. ✅ **迭代改进**：未达标章节自动返工
@@ -312,14 +332,24 @@ git clone https://github.com/Haimbeau1o/thesis-optimizer.git
 
 优化过程中会生成以下文件（在论文同目录下）：
 
+**LaTeX 论文**：
 ```
 论文目录/
-├── thesis_liuxuewen.tex             # 原始论文
+├── thesis_liuxuewen.tex             # 原始论文（已就地优化）
 ├── thesis_master_overview.md        # 总揽文档（进度追踪）
 ├── chapter_01_abstract.md           # 第 1 章优化任务
 ├── chapter_02_intro.md              # 第 2 章优化任务
-├── ...
-└── optimized_thesis/                # 优化后的 LaTeX 文件
+└── ...
+```
+
+**Word 论文**：
+```
+论文目录/
+├── thesis_liuxuewen.docx            # 原始论文（保持不变）
+├── thesis_liuxuewen_optimized.docx  # 优化后文件（含 tracked changes）
+├── thesis_master_overview.md        # 总揽文档（进度追踪）
+├── chapter_01_abstract.md           # 第 1 章优化任务
+└── ...
 ```
 
 ---
@@ -556,6 +586,9 @@ thesis-optimizer/
 │   └── chapter_task_template.md      # 章节任务模板
 │
 └── references/                       # 策略参考文档
+    ├── ai_pattern_taxonomy.md        # 30+ 种 AI 模式分类体系
+    ├── ai_vocabulary_blacklist.md    # 三级 AI 高频毒词表
+    ├── perplexity_burstiness.md      # GPTZero 检测原理及对抗策略
     ├── strategy_ai_reduction.md      # 降 AI 检测率策略
     ├── strategy_plagiarism.md        # 降查重率策略
     ├── strategy_polishing.md         # 学术润色策略
@@ -568,7 +601,12 @@ thesis-optimizer/
 
 ### Q1: 支持哪些论文格式？
 
-**A**: 目前仅支持 **LaTeX (.tex)** 格式论文。Word 格式计划在后续版本支持。
+**A**: 目前支持以下两种格式：
+
+| 格式 | 支持状态 | 写回方式 |
+|------|---------|---------|
+| **LaTeX** (`.tex`) | ✅ 完整支持 | 直接编辑源文件 |
+| **Word** (`.docx`) | ✅ 完整支持 | tracked changes 写回，可在 Word 中审阅 |
 
 ---
 
