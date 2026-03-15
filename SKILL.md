@@ -17,6 +17,17 @@ description: |
 
 # Thesis-Optimizer: 学术论文智能优化系统
 
+## 支持的论文格式 / Supported Formats
+
+| 格式 | 读取方式 | 写回方式 |
+|------|---------|---------|
+| `.tex` (LaTeX) | `view_file` 直接读取 | 直接编辑源文件 |
+| `.docx` (Word) | `pandoc` 提取文本 或 unpack XML | unpack → 编辑 XML → pack 写回 |
+
+**格式自动识别**：系统根据用户提供的文件扩展名自动选择对应处理流程。
+
+---
+
 ## 何时使用此Skill / When to Use
 
 当用户需要对学位论文进行以下优化时触发：
@@ -48,11 +59,27 @@ description: |
 **触发条件**: 用户首次请求优化论文
 
 **执行步骤**:
-1. 使用 `view_file` 完整阅读论文LaTeX源文件
+
+#### 若论文为 `.tex` 格式：
+1. 使用 `view_file` 完整阅读LaTeX源文件
 2. 分析结构：识别章节、段落、公式、图表
 3. 内容解读：理解研究主题、核心贡献、论证逻辑
 4. 问题诊断：识别AI特征、查重风险点、表达问题
 5. 根据 `templates/master_overview_template.md` 生成总揽文档
+
+#### 若论文为 `.docx` 格式：
+1. 使用 pandoc 提取全文文本：
+   ```bash
+   pandoc --track-changes=all thesis.docx -o thesis_extracted.md
+   ```
+2. 读取提取后的 markdown 文件，分析结构与内容
+3. 同步 unpack docx 以备后续 XML 级别写回：
+   ```bash
+   python scripts/office/unpack.py thesis.docx unpacked/
+   ```
+4. 内容解读：理解研究主题、核心贡献、论证逻辑
+5. 问题诊断：识别AI特征、查重风险点、表达问题
+6. 根据 `templates/master_overview_template.md` 生成总揽文档
 
 **输出**: `thesis_master_overview.md` 存储在论文同目录
 
@@ -84,8 +111,24 @@ description: |
    - 策略E: 降查重率（语义改写） → `strategy_plagiarism.md`
    - 策略F: 学术润色（精炼与连贯） → `strategy_polishing.md`
 
-3. **生成优化后的LaTeX**
-   - 保持原有格式规范
+3. **生成优化后的内容并写回**
+
+   **若为 `.tex` 格式**：
+   - 直接编辑源文件对应段落
+   - 保持原有LaTeX格式规范
+   - 记录改写前后对照
+
+   **若为 `.docx` 格式**：
+   - 在已 unpack 的 XML 中定位目标段落
+   - 使用 tracked changes 方式写入修改（作者标注为"thesis-optimizer"）：
+     ```xml
+     <w:del w:author="thesis-optimizer" ...><w:r><w:delText>原文</w:delText></w:r></w:del>
+     <w:ins w:author="thesis-optimizer" ...><w:r><w:t>优化后</w:t></w:r></w:ins>
+     ```
+   - 所有章节修改完成后执行 pack 写回：
+     ```bash
+     python scripts/office/pack.py unpacked/ thesis_optimized.docx --original thesis.docx
+     ```
    - 记录改写前后对照
 
 4. **更新总揽文档**
